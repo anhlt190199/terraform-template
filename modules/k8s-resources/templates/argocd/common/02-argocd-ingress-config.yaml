@@ -1,0 +1,34 @@
+---
+# Cert-manager: https://docs.konghq.com/kubernetes-ingress-controller/1.1.x/guides/cert-manager/
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${metadata_name}
+  annotations:
+    external-dns.alpha.kubernetes.io/provider: aws
+    kubernetes.io/tls-acme: 'true'
+    cert-manager.io/cluster-issuer: letsencrypt-private-resource
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+  namespace: ${metadata_namespace}
+spec:
+  ingressClassName: ${ingress_class_name}
+  tls:
+    - hosts:
+        - ${spec_rules_host}
+      secretName: ${spec_rules_host}
+  rules:
+    - host: ${spec_rules_host}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 443
+
+#  tls:
+#    - secretName: argocd-secret
+#      hosts:
+#        - ${spec_rules_host}

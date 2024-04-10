@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  mongo:
+    image: mongo:7.0.2
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./mongo-data:/data/db
+    restart: always
+    # authorization enabled
+    entrypoint: ['/usr/bin/mongod', '--bind_ip', '0.0.0.0', '--auth']
+    # name: postgres
+    container_name: mongodb

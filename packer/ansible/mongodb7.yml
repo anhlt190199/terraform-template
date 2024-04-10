@@ -1,0 +1,8 @@
+- name: Setup New Database Server
+  hosts: localhost
+  become: yes
+  become_user: root
+  roles:
+    - role: mongodb7
+  tags:
+    - mongodb7

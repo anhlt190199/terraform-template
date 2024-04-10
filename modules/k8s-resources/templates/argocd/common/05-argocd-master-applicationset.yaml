@@ -1,0 +1,41 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: anhlt-master-applicationset
+  namespace: ${metadata_namespace}
+spec:
+  generators:
+    - git:
+        repoURL: 'https://git.vmo.dev/c2/anhlt21054-anhlt-hello-kyc/operation-2023/anhlt-configure.git'
+        revision: "main"
+        directories:
+          - path: "manifest/*"
+          - path: "manifest/*/*"
+            exclude: true
+          - path: "manifest/manual"
+            exclude: true
+          - path: "manifest/backup"
+            exclude: true
+  template:
+    metadata:
+      name: 'master-project-{{path.basename}}'
+      labels:
+        app.kubernetes.io/name: 'master-project-{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'https://git.vmo.dev/c2/anhlt21054-anhlt-hello-kyc/operation-2023/anhlt-configure.git'
+        path: "{{path}}"
+        targetRevision: main
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: ${metadata_namespace}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true

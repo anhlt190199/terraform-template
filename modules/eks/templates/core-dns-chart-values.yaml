@@ -1,0 +1,7 @@
+nodeSelector:
+  node.kubernetes.io/environment: "development"
+tolerations:
+  - effect: "NoSchedule"
+    key: "node.kubernetes.io/environment"
+    operator: "Equal"
+    value: "development"

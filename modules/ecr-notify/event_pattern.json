@@ -1,0 +1,21 @@
+{
+  "source": ["aws.ecr"],
+  "detail-type": ["ECR Image Scan"],
+  "detail": {
+    "finding-severity-counts": {
+      "$or": [{
+        "CRITICAL": [{
+          "exists": true
+        }]
+      }, {
+        "HIGH": [{
+          "exists": true
+        }]
+      }, {
+        "MEDIUM": [{
+          "exists": true
+        }]
+      }]
+    }
+  }
+}

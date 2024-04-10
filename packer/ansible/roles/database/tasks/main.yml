@@ -1,0 +1,24 @@
+---
+- name: "Prepare /app folder"
+  file:
+    path: /app
+    state: directory
+    mode: 0755
+
+- name: "Copy docker-compose.yml"
+  template:
+    src: docker-compose.yml.j2
+    dest: '/app/docker-compose.yml'
+    mode: 0644
+
+# - name: "Change working directory"
+#   shell: "cd {{CATALINA_HOME}}"
+#   tags: 
+#     - ansible-role-otel
+
+- name: "Start docker-compose"
+  shell: docker-compose up -d
+  environment:
+    PATH: /usr/local/bin/:/usr/bin/:/bin
+  args:
+    chdir: '/app'

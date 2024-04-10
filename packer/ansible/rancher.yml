@@ -1,0 +1,8 @@
+- name: Setup Database Server
+  hosts: localhost
+  become: yes
+  become_user: root
+  roles:
+    - role: rancher
+  tags:
+    - rancher

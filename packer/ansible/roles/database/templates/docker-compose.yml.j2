@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:13.7
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_HOST_AUTH_METHOD: md5
+      # timezone UTC+0
+      TZ: "UTC"
+      PGTZ: "UTC"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    # alway restart postgres container
+    restart: always
+    container_name: postgres
+
+  mongo:
+    image: mongo:4.0.28 
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./mongo-data:/data/db
+    restart: always
+    # authorization enabled
+    entrypoint: ['/usr/bin/mongod', '--bind_ip', '0.0.0.0', '--auth']
+    # name: postgres
+    container_name: mongo
+
+  redis:
+    image: redis:7.0.5-bullseye
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    restart: always
+    container_name: redis
+
+  rabbitmq_dev:
+    image: rabbitmq:3.10.10-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    restart: always
+    container_name: rabbitmq_dev
+
+  rabbitmq_staging:
+    image: rabbitmq:3.10.10-management
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    restart: always
+    container_name: rabbitmq_staging

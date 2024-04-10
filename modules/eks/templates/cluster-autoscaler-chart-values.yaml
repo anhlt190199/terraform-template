@@ -1,0 +1,28 @@
+awsRegion: ${aws_region}
+autoDiscovery:
+  enable: true
+  clusterName: ${cluster_name}
+rbac:
+  create: true
+  serviceAccount:
+    name: ${service_account_name}
+    annotations:
+      eks.amazonaws.com/role-arn: ${service_account_role_arn}
+image:
+  repository: registry.k8s.io/autoscaling/cluster-autoscaler
+  tag: v1.23.0
+
+nodeSelector:
+  node.kubernetes.io/environment: "development"
+tolerations:
+  - key: "node.kubernetes.io/environment"
+    operator: "Equal"
+    value: "development"
+    effect: "NoSchedule"
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/instance: cluster-autoscaler
